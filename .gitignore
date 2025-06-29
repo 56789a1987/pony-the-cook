@@ -1,0 +1,13 @@
+/.vs
+/.vscode/*
+!/.vscode/launch.json
+!/.vscode/tasks.json
+
+/build
+/deps
+
+game
+*.out
+*.dll
+*.exe
+*.zip

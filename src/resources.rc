@@ -1,0 +1,30 @@
+#include <winver.h>
+
+1 VERSIONINFO
+FILEVERSION    1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+FILEFLAGS      0x0L
+FILEOS         VOS__WINDOWS32
+FILETYPE       VFT_APP
+FILESUBTYPE    VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "FileDescription", "A pony cooking something"
+            VALUE "FileVersion",     "1, 0, 0, 0"
+            VALUE "ProductName",     "Cook"
+            VALUE "ProductVersion",  "1, 0, 0, 0"
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+1 24 "resources/application.manifest"
+100 ICON "resources/icon.ico"

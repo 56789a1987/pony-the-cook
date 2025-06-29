@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: build all",
+			"command": "/usr/bin/gcc",
+			"args": [
+				"-g",
+				"${workspaceFolder}/src/*.c",
+				"-o",
+				"${workspaceFolder}/game",
+				"-lwebpdemux",
+				"-lSDL2",
+				"-lSDL2_image",
+				"-lSDL2_mixer"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "Compiler: /usr/bin/gcc"
+		}
+	]
+}
