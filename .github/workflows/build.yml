@@ -16,9 +16,12 @@ jobs:
           - { sys: mingw32, env: i686, arch: x86, libwebp: 1.5.0, sdl: 2.32.8, sdl_image: 2.8.8, sdl_mixer: 2.8.1 }
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Setup MSYS2
         uses: msys2/setup-msys2@v2
         with:
+          update: true
           msystem: ${{ matrix.sys }}
           install: mingw-w64-${{ matrix.env }}-gcc unzip zip
 
