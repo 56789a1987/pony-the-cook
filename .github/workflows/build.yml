@@ -25,6 +25,7 @@ jobs:
       - name: Build MinGW
         shell: msys2 {0}
         run: |
+          mkdir -p deps
           wget -qO- https://github.com/webmproject/libwebp/archive/refs/tags/v${{ matrix.libwebp }}.tar.gz | tar zxvf - -C deps
           mv deps/libwebp-${{ matrix.libwebp }} deps/libwebp
 
