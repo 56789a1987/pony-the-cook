@@ -7,13 +7,24 @@
 			"command": "/usr/bin/gcc",
 			"args": [
 				"-g",
+				"-Wall",
+				"-Wextra",
+				"-Wno-unused-parameter",
 				"${workspaceFolder}/src/*.c",
+				"`pkg-config",
+				"--cflags",
+				"libwebpdemux",
+				"sdl2",
+				"SDL2_image",
+				"SDL2_mixer`",
 				"-o",
 				"${workspaceFolder}/game",
-				"-lwebpdemux",
-				"-lSDL2",
-				"-lSDL2_image",
-				"-lSDL2_mixer"
+				"`pkg-config",
+				"--libs",
+				"libwebpdemux",
+				"sdl2",
+				"SDL2_image",
+				"SDL2_mixer`",
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"

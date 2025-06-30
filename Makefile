@@ -1,5 +1,12 @@
+CFLAGS=-g -Wall -Wextra -Wno-unused-parameter `pkg-config --cflags libwebpdemux sdl2 SDL2_image SDL2_mixer`
+LDFLAGS=`pkg-config --libs libwebpdemux sdl2 SDL2_image SDL2_mixer`
+
 game:
-	gcc -Os -s src/*.c -o game -lwebpdemux -lSDL2 -lSDL2_image -lSDL2_mixer
+	gcc $(CFLAGS) src/*.c -o game $(LDFLAGS)
+
+.PHONY: run
+run: game
+	./game
 
 .PHONY: clean
 clean:
