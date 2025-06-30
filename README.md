@@ -1,3 +1,5 @@
+Windows prebuilt binaries can be found in Actions
+
 ## Build on Linux
 
 ### Dependencies
@@ -37,7 +39,7 @@ make
   - Download `SDL2_image-2.x.x-win32-x86.zip` and extract `SDL2_image.dll` to the working directory
 
 - **SDL2 mixer** ([releases](https://github.com/libsdl-org/SDL_mixer/releases))
-  - Download `SDL2_mixer-devel-2.x.x-mingw.tar.gz` and extract to `deps/SDL2/mixer`
+  - Download `SDL2_mixer-devel-2.x.x-mingw.tar.gz` and extract to `deps/SDL2_mixer`
   - Download `SDL2_mixer-2.x.x-win32-x86.zip` and extract `SDL2_mixer.dll` and `optional/libogg-0.dll` to the working directory
 
 ### Build the source code
