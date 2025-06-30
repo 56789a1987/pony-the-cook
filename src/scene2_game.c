@@ -48,8 +48,8 @@ static void createUIButton(UIButton *button, StaticImage *image, int x, int y) {
     button->image = image;
     button->rect.x = x;
     button->rect.y = y;
-    button->rect.w = image->surface->w >> 1;
-    button->rect.h = image->surface->h;
+    button->rect.w = image->width >> 1;
+    button->rect.h = image->height;
 }
 
 static void drawUIButton(SDL_Renderer *renderer, UIButton *button) {
@@ -78,7 +78,7 @@ static GameSceneIngredient *generateGameSceneIngredient(GameSceneParams *params)
     item->accurateX = INGREDIENT_MAX_X * 16;
     item->rect.x = INGREDIENT_MAX_X;
     item->rect.w = INGREDIENT_WIDTH;
-    item->rect.h = params->ingredientsSheet->surface->h;
+    item->rect.h = params->ingredientsSheet->height;
 
     int rareTypesCount = params->ingredientsCount - INGREDIENT_PLAIN;
     // Possible to generate a rare ingredient every 3 items
@@ -161,7 +161,7 @@ static void drawGameScene(SDL_Renderer *renderer, Scene *scene) {
 
     if (lookAtItem) {
         SDL_Rect *itemRect = &lookAtItem->rect;
-        int eyeWidth = params->eyesSheet->surface->w;
+        int eyeWidth = params->eyesSheet->width;
         int offsetY = params->isAltIdleImage ? 3 : 0;
 
         // Left eye
@@ -408,9 +408,9 @@ Scene *createGameScene(SDL_Renderer *renderer) {
 
     AnimatedImage *idleAnimation = loadAnimationWebp(renderer, "images/cooking_idle.webp");
     AnimatedImage *actionAnimation = loadAnimationWebp(renderer, "images/cooking_action.webp");
-    StaticImage *cookButton = loadImagePng(renderer, "images/button_cook.png");
-    StaticImage *eyesSheet = loadImagePng(renderer, "images/eyes_sheet.png");
-    StaticImage *ingredientsSheet = loadImagePng(renderer, "images/ingredients_sheet.png");
+    StaticImage *cookButton = loadImageWebp(renderer, "images/button_cook.webp");
+    StaticImage *eyesSheet = loadImageWebp(renderer, "images/eyes_sheet.webp");
+    StaticImage *ingredientsSheet = loadImageWebp(renderer, "images/ingredients_sheet.webp");
     if (!idleAnimation || !actionAnimation || !cookButton || !eyesSheet || !ingredientsSheet) {
         return NULL;
     }
@@ -420,7 +420,7 @@ Scene *createGameScene(SDL_Renderer *renderer) {
     idleAnimation->frameCount /= 2;
     params->eyesSheet = eyesSheet;
     params->ingredientsSheet = ingredientsSheet;
-    params->ingredientsCount = ingredientsSheet->surface->w / INGREDIENT_WIDTH;
+    params->ingredientsCount = ingredientsSheet->width / INGREDIENT_WIDTH;
     params->counts = SDL_malloc(params->ingredientsCount * sizeof(*params->counts));
     params->typesQueue = SDL_malloc(INGREDIENT_PLAIN * sizeof(int));
     params->idleAnimation = idleAnimation;

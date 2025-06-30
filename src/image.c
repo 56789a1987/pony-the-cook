@@ -1,55 +1,73 @@
 #include "image.h"
 #include <webp/demux.h>
 
-StaticImage *loadImagePng(SDL_Renderer *renderer, const char *file) {
+static void *readFile(const char *file, size_t *sizeOut) {
     SDL_RWops *fileRW = SDL_RWFromFile(file, "rb");
     if (!fileRW) {
-        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't open image %s: %s", file, SDL_GetError());
         return NULL;
     }
 
-    SDL_Surface *surface = IMG_LoadPNG_RW(fileRW);
-    if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't load image %s: %s", file, IMG_GetError());
-        SDL_RWclose(fileRW);
+    Sint64 size = SDL_RWsize(fileRW);
+    if (size < 0) {
+        return NULL;
+    }
+
+    void *buffer = SDL_malloc(size);
+    if (SDL_RWread(fileRW, buffer, 1, size) == 0) {
         return NULL;
     }
     SDL_RWclose(fileRW);
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture) {
+    *sizeOut = size;
+    return buffer;
+}
+
+StaticImage *loadImageWebp(SDL_Renderer *renderer, const char *file) {
+    size_t fileSize;
+    void *buffer = readFile(file, &fileSize);
+    if (!buffer) {
+        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't open image %s: %s", file, SDL_GetError());
+        return NULL;
+    }
+
+    int width, height;
+    uint8_t *rgba = WebPDecodeRGBA(buffer, fileSize, &width, &height);
+    if (!rgba) {
+        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't decode image: %s", file);
+        return NULL;
+    }
+
+    StaticImage *image = SDL_malloc(sizeof(StaticImage));
+    SDL_zerop(image);
+    image->width = width;
+    image->height = height;
+
+    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+    if (!texture || SDL_UpdateTexture(texture, NULL, rgba, width * 4) < 0) {
         SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't create texture for image %s: %s", file, SDL_GetError());
         return NULL;
     }
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-
-    StaticImage *image = SDL_malloc(sizeof(StaticImage));
-    image->surface = surface;
     image->texture = texture;
+
+    WebPFree(rgba);
+    SDL_free(buffer);
+
     return image;
 }
 
 void freeImage(StaticImage *image) {
     SDL_DestroyTexture(image->texture);
-    SDL_FreeSurface(image->surface);
     SDL_free(image);
 }
 
 AnimatedImage *loadAnimationWebp(SDL_Renderer *renderer, const char *file) {
-    SDL_RWops *fileRW = SDL_RWFromFile(file, "rb");
-    if (!fileRW) {
-        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't open image file %s: %s", file, SDL_GetError());
+    size_t fileSize;
+    void *buffer = readFile(file, &fileSize);
+    if (!buffer) {
+        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't open image %s: %s", file, SDL_GetError());
         return NULL;
     }
-
-    Sint64 fileSize = SDL_RWsize(fileRW);
-    void *buffer = SDL_malloc(fileSize);
-
-    if (SDL_RWread(fileRW, buffer, 1, fileSize) == 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't read image file %s: %s", file, SDL_GetError());
-        return NULL;
-    }
-    SDL_RWclose(fileRW);
 
     WebPData webpData;
     WebPDataInit(&webpData);
@@ -70,24 +88,27 @@ AnimatedImage *loadAnimationWebp(SDL_Renderer *renderer, const char *file) {
     AnimatedImage *image = SDL_malloc(sizeof(AnimatedImage));
     SDL_zerop(image);
 
-    image->width = webpInfo.canvas_width;
-    image->height = webpInfo.canvas_height;
-    image->frameCount = webpInfo.frame_count;
-    image->delays = SDL_malloc(sizeof(int) * webpInfo.frame_count);
-    image->textures = SDL_malloc(sizeof(SDL_Surface *) * webpInfo.frame_count);
+    int width = webpInfo.canvas_width;
+    int height = webpInfo.canvas_height;
+    int frames = webpInfo.frame_count;
+    image->width = width;
+    image->height = height;
+    image->frameCount = frames;
+    image->delays = SDL_malloc(sizeof(int) * frames);
+    image->textures = SDL_malloc(sizeof(SDL_Surface *) * frames);
 
     int frame = 0;
     int lastTimestamp = 0;
     while (WebPAnimDecoderHasMoreFrames(webpDecoder)) {
         int timestamp;
-        uint8_t *frameBuffer;
-        if (!WebPAnimDecoderGetNext(webpDecoder, &frameBuffer, &timestamp)) {
+        uint8_t *rgba;
+        if (!WebPAnimDecoderGetNext(webpDecoder, &rgba, &timestamp)) {
             SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't decode image %s frame %d", file, frame);
             return NULL;
         }
 
-        SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, webpInfo.canvas_width, webpInfo.canvas_height);
-        if (SDL_UpdateTexture(texture, NULL, frameBuffer, webpInfo.canvas_width * 4) < 0) {
+        SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+        if (!texture || SDL_UpdateTexture(texture, NULL, rgba, width * 4) < 0) {
             SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't create texture for image %s frame %d: %s", file, frame, SDL_GetError());
             return NULL;
         }

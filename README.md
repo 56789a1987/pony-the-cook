@@ -4,11 +4,11 @@ Windows prebuilt binaries can be found in Actions
 
 ### Dependencies
 
-- Ubuntu and other Debian based `build-essential libwebp-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev`
+- Ubuntu and other Debian based `build-essential libwebp-dev libsdl2-dev libsdl2-mixer-dev`
 
-- Fedora and other RPM based `gcc-c++ libwebp-devel SDL2-devel SDL2_image-devel SDL2_mixer-devel`
+- Fedora and other RPM based `gcc-c++ libwebp-devel SDL2-devel SDL2_mixer-devel`
 
-- Arch based `base-devel libwebp sdl2 sdl2_image sdl2_mixer`
+- Arch based `base-devel libwebp sdl2 sdl2_mixer`
 
 ### Build the source code
 
@@ -33,10 +33,6 @@ make
   - **Make sure you're downloading SDL2 not SDL3**
   - Download `SDL2-devel-2.x.x-mingw.tar.gz` and extract to `deps/SDL2`
   - Download `SDL2-2.x.x-win32-x86.zip` and extract `SDL2.dll` to the working directory
-
-- **SDL2 image** ([releases](https://github.com/libsdl-org/SDL_image/releases))
-  - Download `SDL2_image-devel-2.x.x-mingw.tar.gz` and extract to `deps/SDL2_image`
-  - Download `SDL2_image-2.x.x-win32-x86.zip` and extract `SDL2_image.dll` to the working directory
 
 - **SDL2 mixer** ([releases](https://github.com/libsdl-org/SDL_mixer/releases))
   - Download `SDL2_mixer-devel-2.x.x-mingw.tar.gz` and extract to `deps/SDL2_mixer`

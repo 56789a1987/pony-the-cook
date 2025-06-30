@@ -2,14 +2,14 @@
 #define APP_IMAGE_h
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 typedef struct {
-    SDL_Surface *surface;
+    int width;
+    int height;
     SDL_Texture *texture;
 } StaticImage;
 
-StaticImage *loadImagePng(SDL_Renderer *renderer, const char *file);
+StaticImage *loadImageWebp(SDL_Renderer *renderer, const char *file);
 void freeImage(StaticImage *image);
 
 typedef struct {

@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - { sys: mingw32, env: i686, arch: x86, libwebp: 1.5.0, sdl: 2.32.8, sdl_image: 2.8.8, sdl_mixer: 2.8.1 }
+          - { sys: mingw32, env: i686, arch: x86, libwebp: 1.5.0, sdl: 2.32.8, sdl_mixer: 2.8.1 }
 
     steps:
       - uses: actions/checkout@v4
@@ -49,18 +49,12 @@ jobs:
           wget -qP deps https://github.com/libsdl-org/SDL/releases/download/release-${{ matrix.sdl }}/SDL2-${{ matrix.sdl }}-win32-${{ matrix.arch }}.zip
           unzip -od deps/SDL2 deps/SDL2-${{ matrix.sdl }}-win32-${{ matrix.arch }}.zip
 
-          wget -qO- https://github.com/libsdl-org/SDL_image/releases/download/release-${{ matrix.sdl_image }}/SDL2_image-devel-${{ matrix.sdl_image }}-mingw.tar.gz | tar zxvf - -C deps
-          mv deps/SDL2_image-${{ matrix.sdl_image }} deps/SDL2_image
-          wget -qP deps https://github.com/libsdl-org/SDL_image/releases/download/release-${{ matrix.sdl_image }}/SDL2_image-${{ matrix.sdl_image }}-win32-${{ matrix.arch }}.zip
-          unzip -od deps/SDL2_image deps/SDL2_image-${{ matrix.sdl_image }}-win32-${{ matrix.arch }}.zip
-
           wget -qO- https://github.com/libsdl-org/SDL_mixer/releases/download/release-${{ matrix.sdl_mixer }}/SDL2_mixer-devel-${{ matrix.sdl_mixer }}-mingw.tar.gz | tar zxvf - -C deps
           mv deps/SDL2_mixer-${{ matrix.sdl_mixer }} deps/SDL2_mixer
           wget -qP deps https://github.com/libsdl-org/SDL_mixer/releases/download/release-${{ matrix.sdl_mixer }}/SDL2_mixer-${{ matrix.sdl_mixer }}-win32-${{ matrix.arch }}.zip
           unzip -od deps/SDL2_mixer deps/SDL2_mixer-${{ matrix.sdl_mixer }}-win32-${{ matrix.arch }}.zip
 
           cp deps/SDL2/SDL2.dll .
-          cp deps/SDL2_image/SDL2_image.dll .
           cp deps/SDL2_mixer/SDL2_mixer.dll .
           cp deps/SDL2_mixer/optional/libogg-0.dll .
 

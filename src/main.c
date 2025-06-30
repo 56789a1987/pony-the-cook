@@ -82,12 +82,6 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    // Initialize SDL image
-    if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-        SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Couldn't initialize SDL image: %s", IMG_GetError());
-        return -1;
-    }
-
     // Initialize SDL mixer. If failed, disable audio and continue
     if (Mix_Init(MIX_INIT_OGG) != MIX_INIT_OGG) {
         g_enableAudio = 0;
@@ -141,7 +135,6 @@ int main(int argc, char *argv[]) {
     int status = gameLoop(window, renderer, renderTarget, scene);
 
     // Release everything
-    IMG_Quit();
     if (g_enableAudio) {
         Mix_CloseAudio();
     }
