@@ -10,7 +10,6 @@ int gameLoop(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *renderTarg
     int windowWidth, windowHeight;
     Uint64 lastTicks = SDL_GetTicks64();
     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-    SDL_GetWindowSizeInPixels;
 
     for (;;) {
         while (SDL_PollEvent(&event)) {

@@ -426,6 +426,8 @@ Scene *createGameScene(SDL_Renderer *renderer) {
     params->idleAnimation = idleAnimation;
     params->actionAnimation = actionAnimation;
     createUIButton(&params->cookButton, cookButton, 0, 0);
+    params->cursor.x = -1;
+    params->cursor.y = -1;
 
     scene->animation = idleAnimation;
     scene->music = loadAndPlayMusic("sounds/working_loop.ogg", -1);

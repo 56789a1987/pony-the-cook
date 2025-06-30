@@ -3,8 +3,20 @@ name: Build
 on:
   push:
     branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'images/**'
+      - 'sounds/**'
+      - 'src/**'
+      - 'build-*.sh'
   pull_request:
     branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'images/**'
+      - 'sounds/**'
+      - 'src/**'
+      - 'build-*.sh'
 
 jobs:
   build-mingw:
